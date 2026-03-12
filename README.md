@@ -1,6 +1,5 @@
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 ![Python](https://img.shields.io/badge/Python-3.8%2B-blueviolet)
-![Status](https://img.shields.io/badge/Status-Active-green)
 
 <h1 align="center">💜 Violet: Cascade Electromechanical Cipher Machine</h1>
 
@@ -245,6 +244,7 @@ If you find Violet useful or just enjoy parsing permutations, please leave a sta
 **Made with 💜 and a passion for cryptography**
 
 *"The enemy is listening. Make sure Violet is talking."* 🔐✨
+
 
 
 
