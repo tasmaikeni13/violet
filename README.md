@@ -1,10 +1,14 @@
-# 💜 Violet: Cascade Electromechanical Cipher Machine
-
+<p align="center">
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 ![Python](https://img.shields.io/badge/Python-3.8%2B-blueviolet)
 ![Status](https://img.shields.io/badge/Status-Active-green)
+</p>
 
-> *A beautiful, mathematically rigorous implementation of the cascade electromechanical cipher machine* 🔐✨
+<h1 align="center">💜 Violet: Cascade Electromechanical Cipher Machine</h1>
+
+<p align="center">
+*A beautiful, mathematically rigorous implementation of the cascade electromechanical cipher machine* 🔐✨
+</p>
 
 ## 🎯 What is Violet?
 
@@ -95,7 +99,7 @@ Where:
 - **σ_t** = Stepping-switch stage (evolves over Z₂₅^k)
 - Composed through elegant permutation mathematics
 
-Each component works independently yet harmoniously to create a robust cipher. See [how_it_works.html](docs/how_it_works.html) for the full technical deep-dive! 📖
+Each component works independently yet harmoniously to create a robust cipher. See [VIOLET.pdf](docs/VIOLET.pdf) or [how_it_works.html](docs/how_it_works.html) for the full technical deep-dive! 📖
 
 
 ### Launch the beautiful GUI
@@ -243,3 +247,4 @@ If you find Violet useful or just enjoy parsing permutations, please leave a sta
 **Made with 💜 and a passion for cryptography**
 
 *"The enemy is listening. Make sure Violet is talking."* 🔐✨
+
