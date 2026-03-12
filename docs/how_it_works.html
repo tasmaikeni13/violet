@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Violet Cipher Explained</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0010;
+      --panel: rgba(24, 7, 36, 0.82);
+      --panel-strong: rgba(38, 11, 58, 0.92);
+      --border: rgba(199, 125, 255, 0.2);
+      --violet: #7b2fbe;
+      --purple: #9d4edd;
+      --lavender: #c77dff;
+      --text: #f4ebff;
+      --muted: #d3bde8;
+      --soft: #b697d3;
+      --accent: #ffd166;
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+      --radius: 24px;
+      --max: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Inter", sans-serif;
+      background: radial-gradient(circle at top, rgba(123, 47, 190, 0.18), transparent 45%), var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    canvas#stars {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+    }
+
+    .page-glow {
+      position: fixed;
+      inset: -20%;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(199, 125, 255, 0.12), transparent 30%),
+        radial-gradient(circle at 80% 15%, rgba(123, 47, 190, 0.14), transparent 28%),
+        radial-gradient(circle at 50% 80%, rgba(157, 78, 221, 0.09), transparent 34%);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .flash {
+      position: fixed;
+      inset: 0;
+      background: rgba(199, 125, 255, 0.18);
+      pointer-events: none;
+      opacity: 0;
+      z-index: 99;
+    }
+
+    .flash.active {
+      animation: pulseFlash 0.55s ease-out;
+    }
+
+    @keyframes pulseFlash {
+      0% { opacity: 0; }
+      20% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    .toast {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: rgba(44, 11, 67, 0.95);
+      border: 1px solid rgba(199, 125, 255, 0.35);
+      color: var(--text);
+      box-shadow: var(--shadow);
+      transform: translateY(120px);
+      opacity: 0;
+      transition: 0.35s ease;
+      z-index: 100;
+    }
+
+    .toast.visible {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    header.hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      padding: 96px 24px 56px;
+      background: linear-gradient(180deg, rgba(66, 14, 104, 0.45), rgba(10, 0, 16, 0.25));
+    }
+
+    .hero-inner,
+    .section-inner,
+    footer .section-inner {
+      width: min(100%, var(--max));
+      margin: 0 auto;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 48px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      gap: 10px;
+      padding: 10px 14px;
+      border: 1px solid rgba(199, 125, 255, 0.22);
+      border-radius: 999px;
+      font-size: 0.9rem;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(10px);
+    }
+
+    h1, h2, h3 {
+      font-family: "Space Grotesk", sans-serif;
+      margin: 0;
+      letter-spacing: -0.03em;
+    }
+
+    h1 {
+      font-size: clamp(4rem, 11vw, 8.2rem);
+      line-height: 0.95;
+      margin-top: 22px;
+      text-shadow: 0 0 24px rgba(199, 125, 255, 0.38), 0 0 60px rgba(123, 47, 190, 0.26);
+    }
+
+    .hero p {
+      max-width: 56ch;
+      font-size: 1.08rem;
+      line-height: 1.75;
+      color: var(--muted);
+      margin: 18px 0 26px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .hero-actions a {
+      text-decoration: none;
+      color: var(--text);
+      padding: 14px 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(199, 125, 255, 0.22);
+      background: rgba(255, 255, 255, 0.03);
+      transition: 0.25s ease;
+    }
+
+    .hero-actions a.primary {
+      background: linear-gradient(135deg, var(--violet), var(--purple));
+      border-color: transparent;
+      box-shadow: 0 18px 36px rgba(123, 47, 190, 0.38);
+    }
+
+    .hero-actions a:hover {
+      transform: translateY(-2px);
+      border-color: rgba(199, 125, 255, 0.45);
+    }
+
+    .schematic {
+      position: relative;
+      padding: 26px;
+      border-radius: 28px;
+      background: linear-gradient(180deg, rgba(30, 9, 46, 0.95), rgba(17, 6, 28, 0.82));
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .schematic::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 0%, rgba(255, 255, 255, 0.06) 12%, transparent 24%);
+      transform: translateX(-120%);
+      animation: sheen 9s linear infinite;
+    }
+
+    @keyframes sheen {
+      to { transform: translateX(160%); }
+    }
+
+    .schematic-track {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .schematic-step {
+      position: relative;
+      text-align: center;
+      padding: 20px 12px;
+      min-height: 110px;
+      border-radius: 20px;
+      border: 1px solid rgba(199, 125, 255, 0.18);
+      background: rgba(255, 255, 255, 0.03);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .schematic-step small {
+      display: block;
+      color: var(--soft);
+      font-weight: 500;
+      margin-top: 6px;
+    }
+
+    .schematic-arrow {
+      position: absolute;
+      top: 50%;
+      left: 10%;
+      right: 10%;
+      height: 2px;
+      background: linear-gradient(90deg, rgba(199, 125, 255, 0.15), rgba(199, 125, 255, 0.45), rgba(199, 125, 255, 0.15));
+      transform: translateY(-50%);
+    }
+
+    .pulse {
+      position: absolute;
+      top: 50%;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.95), rgba(199,125,255,0.85) 55%, transparent 70%);
+      transform: translate(-10px, -50%);
+      animation: travel 4s ease-in-out infinite;
+      box-shadow: 0 0 18px rgba(199, 125, 255, 0.95);
+    }
+
+    @keyframes travel {
+      0%, 10% { left: 10%; opacity: 0; }
+      15%, 85% { opacity: 1; }
+      90%, 100% { left: 90%; opacity: 0; }
+    }
+
+    main section {
+      padding: 88px 24px;
+      position: relative;
+    }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .section-kicker {
+      display: inline-block;
+      color: var(--lavender);
+      font-size: 0.86rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .section-intro {
+      max-width: 70ch;
+      color: var(--muted);
+      line-height: 1.8;
+      margin-top: 18px;
+    }
+
+    .pull-quote {
+      margin-top: 30px;
+      padding: 28px;
+      border-left: 4px solid var(--lavender);
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(123, 47, 190, 0.18), rgba(199, 125, 255, 0.08));
+      box-shadow: var(--shadow);
+      color: var(--text);
+      font-size: 1.08rem;
+      line-height: 1.85;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+      margin-top: 38px;
+    }
+
+    .step-card,
+    .card,
+    .callout,
+    .metric-widget,
+    .accordion-item,
+    .table-wrap {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .step-card {
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .step-card::after {
+      content: "";
+      position: absolute;
+      inset: auto -20% -45% 40%;
+      height: 180px;
+      background: radial-gradient(circle, rgba(123, 47, 190, 0.2), transparent 65%);
+    }
+
+    .step-index {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(199, 125, 255, 0.16);
+      color: var(--lavender);
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+
+    .formula-box {
+      margin-top: 30px;
+      padding: 24px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, rgba(123, 47, 190, 0.16), rgba(157, 78, 221, 0.07));
+      border: 1px solid rgba(199, 125, 255, 0.22);
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(1.25rem, 4vw, 2rem);
+      text-align: center;
+      letter-spacing: -0.04em;
+    }
+
+    .formula-box .symbol {
+      color: var(--accent);
+    }
+
+    .formula-box sub {
+      font-size: 0.55em;
+      vertical-align: -0.25em;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+      margin-top: 36px;
+    }
+
+    .card {
+      padding: 28px;
+      min-height: 260px;
+    }
+
+    .card h3 {
+      font-size: 1.35rem;
+      margin-bottom: 14px;
+    }
+
+    .card p,
+    .step-card p,
+    .callout p,
+    .metric-widget p,
+    .accordion-content p,
+    .accordion-content em,
+    .table-caption,
+    .section-intro,
+    .card li {
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .table-wrap {
+      padding: 18px;
+      overflow-x: auto;
+      margin-top: 34px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+    }
+
+    th, td {
+      padding: 16px 14px;
+      text-align: left;
+      border-bottom: 1px solid rgba(199, 125, 255, 0.12);
+    }
+
+    thead th {
+      color: var(--lavender);
+      font-family: "Space Grotesk", sans-serif;
+      font-weight: 700;
+    }
+
+    tbody tr {
+      transition: 0.25s ease;
+    }
+
+    tbody tr:hover {
+      background: rgba(199, 125, 255, 0.08);
+    }
+
+    .callouts {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+      margin-top: 34px;
+    }
+
+    .callout,
+    .metric-widget {
+      padding: 24px;
+    }
+
+    .widget-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .widget-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    button,
+    .widget-button {
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 18px;
+      cursor: pointer;
+      font: inherit;
+      color: white;
+      background: linear-gradient(135deg, var(--violet), var(--purple));
+      box-shadow: 0 12px 28px rgba(123, 47, 190, 0.28);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    button:hover,
+    .widget-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 36px rgba(123, 47, 190, 0.34);
+    }
+
+    .widget-result {
+      font-size: 1.06rem;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    .histogram {
+      display: grid;
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+      gap: 10px;
+      align-items: end;
+      min-height: 180px;
+    }
+
+    .histogram-bar {
+      display: flex;
+      flex-direction: column;
+      justify-content: end;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .histogram-bar span.value {
+      width: 100%;
+      min-height: 4px;
+      border-radius: 16px 16px 4px 4px;
+      background: linear-gradient(180deg, var(--lavender), var(--violet));
+      transition: height 0.3s ease;
+    }
+
+    .histogram-bar strong {
+      color: var(--soft);
+      font-size: 0.85rem;
+    }
+
+    .accordion {
+      display: grid;
+      gap: 14px;
+      margin-top: 34px;
+    }
+
+    .accordion-button {
+      width: 100%;
+      background: transparent;
+      box-shadow: none;
+      border-radius: 0;
+      padding: 22px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      text-align: left;
+      color: var(--text);
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.05rem;
+    }
+
+    .accordion-button:hover {
+      transform: none;
+      box-shadow: none;
+    }
+
+    .accordion-button span:last-child {
+      color: var(--lavender);
+      transition: transform 0.2s ease;
+    }
+
+    .accordion-item.open .accordion-button span:last-child {
+      transform: rotate(45deg);
+    }
+
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      padding: 0 24px;
+    }
+
+    .accordion-item.open .accordion-content {
+      max-height: 320px;
+      padding: 0 24px 24px;
+    }
+
+    .hidden-key {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    footer {
+      padding: 40px 24px 60px;
+      color: var(--soft);
+    }
+
+    @media (max-width: 1024px) {
+      .hero-grid,
+      .cards,
+      .steps,
+      .callouts,
+      .widget-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .schematic-track {
+        grid-template-columns: 1fr;
+      }
+
+      .schematic-arrow,
+      .pulse {
+        display: none;
+      }
+    }
+
+    @media (max-width: 720px) {
+      header.hero {
+        padding-top: 80px;
+      }
+
+      main section {
+        padding: 70px 18px;
+      }
+
+      .table-wrap {
+        border-radius: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- The key is in the cascade: E_t = σ_t ∘ ρ_t -->
+  <canvas id="stars"></canvas>
+  <div class="page-glow"></div>
+  <div class="flash" id="flash"></div>
+  <div class="toast" id="toast">🟣 You found the Easter egg. Violet knows you're here.</div>
+
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="hero-grid fade-up">
+        <div>
+          <div class="eyebrow">Cascade electromechanical design · Full alphabet · Non-reciprocal</div>
+          <h1>VIOLET</h1>
+          <p>A Cascade Electromechanical Cipher Machine. Violet combines a reflectorless rotor bank with an independent bank of stepping switches, letting two different scrambling rhythms evolve side by side until they produce one enormous cycle across the full 26-letter alphabet.</p>
+          <div class="hero-actions">
+            <a class="primary" href="#what-is-violet">Start the tour</a>
+            <a href="#the-seven-theorems">See the theorems</a>
+          </div>
+        </div>
+        <div class="schematic" aria-label="Animated schematic of the Violet signal path">
+          <div class="schematic-arrow"></div>
+          <div class="pulse"></div>
+          <div class="schematic-track">
+            <div class="schematic-step">PLAINTEXT<small>keyboard input</small></div>
+            <div class="schematic-step">PLUGBOARD<small>fixed involution P</small></div>
+            <div class="schematic-step">ROTOR STAGE<small>ρ<sub>t</sub></small></div>
+            <div class="schematic-step">SWITCH STAGE<small>σ<sub>t</sub></small></div>
+            <div class="schematic-step">CIPHERTEXT<small>lampboard output</small></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="hidden-key" aria-hidden="true">violet-trigger</div>
+  </header>
+
+  <main>
+    <section id="what-is-violet">
+      <div class="section-inner fade-up">
+        <span class="section-kicker">What Is Violet?</span>
+        <h2>Two scrambling machines, one message, and a rhythm that barely ever repeats</h2>
+        <p class="section-intro">Imagine a message passing through two independent scrambling machines in sequence. Each machine changes with every letter you type, and the two machines change at completely different rhythms. One counts in 26s. The other counts in 25s. Because 26 and 25 share no common factors, they do not sync up for a staggering 2.9 quadrillion steps.</p>
+        <div class="pull-quote">“Violet does not rely on one clever trick. It stacks two full-alphabet permutation systems that evolve autonomously, then lets arithmetic do the heavy lifting.”</div>
+      </div>
+    </section>
+
+    <section id="how-it-works">
+      <div class="section-inner fade-up">
+        <span class="section-kicker">How It Works</span>
+        <h2>A letter-by-letter walkthrough of the cascade</h2>
+        <div class="steps">
+          <article class="step-card">
+            <div class="step-index">1</div>
+            <h3>Plugboard</h3>
+            <p>The first contact is a fixed swap network. The plugboard implements an involutory permutation <strong>P</strong>, meaning its own inverse undoes it. If A is paired with Z, then Z is paired with A.</p>
+          </article>
+          <article class="step-card">
+            <div class="step-index">2</div>
+            <h3>Rotor Stage</h3>
+            <p>Next, the signal passes through five wired rotating discs. Each displaced rotor applies a conjugated permutation, and together they form <strong>ρ<sub>t</sub> = R<sub>5</sub>(t) ∘ ··· ∘ R<sub>1</sub>(t) ∘ P</strong>.</p>
+          </article>
+          <article class="step-card">
+            <div class="step-index">3</div>
+            <h3>Switch Stage</h3>
+            <p>The output then enters six Strowger-style stepping switches. Each switch selects one of 25 position-specific wirings, producing <strong>σ<sub>t</sub> = W<sub>6</sub><sup>(q<sub>6</sub>)</sup> ∘ ··· ∘ W<sub>1</sub><sup>(q<sub>1</sub>)</sup></strong>.</p>
+          </article>
+          <article class="step-card">
+            <div class="step-index">4</div>
+            <h3>The Cascade</h3>
+            <p>The stages combine in order. First the rotor stage scrambles the symbol. Then the switch stage scrambles that output again. The resulting permutation is the live encryption rule for that exact keystroke.</p>
+          </article>
+        </div>
+        <div class="formula-box">
+          <span class="symbol">E</span><sub>t</sub> = <span class="symbol">σ</span><sub>t</sub> ∘ <span class="symbol">ρ</span><sub>t</sub>
+        </div>
+      </div>
+    </section>
+
+    <section id="why-strong">
+      <div class="section-inner fade-up">
+        <span class="section-kicker">Why Is It Strong?</span>
+        <h2>Three structural advantages over classical machines</h2>
+        <div class="cards">
+          <article class="card">
+            <h3>No Reflector</h3>
+            <p>Unlike the Enigma, Violet has no mirror. Enigma could never encrypt a letter to itself, and that weakness helped Allied codebreakers design the Bombe. Violet has no such built-in restriction.</p>
+          </article>
+          <article class="card">
+            <h3>No Alphabet Split</h3>
+            <p>Japan’s Purple machine split the alphabet into two groups of 6 and 20. Once analysts spotted that split, the search space collapsed. Violet processes all 26 letters together at every step.</p>
+          </article>
+          <article class="card">
+            <h3>Two Independent Rhythms</h3>
+            <p>The rotor period is 26<sup>5</sup>. The switch period is 25<sup>6</sup>. These are coprime, so by the Chinese Remainder Theorem the machine visits every global state before repeating, for a cycle around 2.9 × 10<sup>15</sup>.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="comparison">
+      <div class="section-inner fade-up">
+        <span class="section-kicker">Violet Vs. The Competition</span>
+        <h2>How it compares to Enigma and Purple</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Machine</th>
+                <th>Year of Concept</th>
+                <th>Key Entropy</th>
+                <th>Period</th>
+                <th>Has Reflector</th>
+                <th>Alphabet Partition</th>
+                <th>Self-Encryption Possible</th>
+                <th>Effective Security</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Enigma</td>
+                <td>1920s</td>
+                <td>≈ 77 bits</td>
+                <td>≈ 16,900</td>
+                <td>Yes</td>
+                <td>No</td>
+                <td>No</td>
+                <td>Historically broken via structural weaknesses and operational misuse</td>
+              </tr>
+              <tr>
+                <td>Purple</td>
+                <td>1930s</td>
+                <td>≈ 60 bits</td>
+                <td>15,625</td>
+                <td>No</td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td>Compromised once the 6/20 split and switch logic were reconstructed</td>
+              </tr>
+              <tr>
+                <td>Violet</td>
+                <td>Theoretical modern reconstruction of a historical design path</td>
+                <td>≈ 111 bits</td>
+                <td>26<sup>5</sup> × 25<sup>6</sup> ≈ 2.9 × 10<sup>15</sup></td>
+                <td>No</td>
+                <td>No</td>
+                <td>Yes</td>
+                <td>Substantially stronger classical architecture with a far larger state cycle</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="math">
+      <div class="section-inner fade-up">
+        <span class="section-kicker">The Math Behind It</span>
+        <h2>Group theory, fixed points, and a huge keyspace</h2>
+        <div class="callouts">
+          <div class="callout">
+            <h3>The symmetric group S<sub>26</sub></h3>
+            <p>Violet’s live transformations live inside the full symmetric group on 26 letters. That means every encryption step is a permutation of the alphabet, and there are 26! ≈ 4 × 10<sup>26</sup> possible permutations available in principle.</p>
+          </div>
+          <div class="callout">
+            <h3>Conjugation as a moving frame</h3>
+            <p>The rotor displacement formula τ<sub>-s</sub> ∘ R ∘ τ<sub>s</sub> means “rotate the coordinate system, apply the rotor wiring, then rotate back.” Geometrically, the wiring stays the same while the frame of reference slides around it.</p>
+          </div>
+        </div>
+        <div class="widget-grid">
+          <div class="metric-widget">
+            <h3>Fixed-point experiment</h3>
+            <p>Random permutations have a famous property: the number of fixed points tends toward a Poisson(1) distribution. Click the button to generate a random permutation of 26 letters, count its fixed points, and update the running histogram.</p>
+            <div class="widget-controls">
+              <button id="rollPermutation">Roll a random permutation</button>
+              <button id="resetHistogram">Reset tally</button>
+            </div>
+            <div class="widget-result" id="widgetResult">No permutation rolled yet.</div>
+            <div class="histogram" id="histogram"></div>
+          </div>
+          <div class="metric-widget">
+            <h3>Keyspace breakdown</h3>
+            <p>For the canonical machine:</p>
+            <p><strong>Rotor order</strong> = 8! / (8 - 5)! = 6720</p>
+            <p><strong>Rotor positions</strong> = 26<sup>5</sup> = 11,881,376</p>
+            <p><strong>Plugboard</strong> = 26! / ((26 - 20)! · 2<sup>10</sup> · 10!) = 150,738,274,937,250</p>
+            <p><strong>Switch positions</strong> = 25<sup>6</sup> = 244,140,625</p>
+            <p><strong>Total</strong> ≈ 2<sup>111</sup> operational keys</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="the-seven-theorems">
+      <div class="section-inner fade-up">
+        <span class="section-kicker">The Seven Theorems</span>
+        <h2>The structural claims the model is built to satisfy</h2>
+        <div class="accordion">
+          <div class="accordion-item">
+            <button class="accordion-button"><span>Closure</span><span>+</span></button>
+            <div class="accordion-content">
+              <p><em>For every time step t, the Violet encryption function E<sub>t</sub> is a permutation in S<sub>26</sub>.</em></p>
+              <p>Every component is a permutation, and compositions of permutations are still permutations, so the machine always defines a bijection on the alphabet.</p>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <button class="accordion-button"><span>Non-Reciprocity</span><span>+</span></button>
+            <div class="accordion-content">
+              <p><em>For generic wirings, E<sub>t</sub> is not an involution, so E<sub>t</sub> ≠ E<sub>t</sub><sup>-1</sup>.</em></p>
+              <p>Because there is no reflector, Violet does not force encryption and decryption to be the same physical action.</p>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <button class="accordion-button"><span>Corollary 9.3</span><span>+</span></button>
+            <div class="accordion-content">
+              <p><em>Violet can encrypt a letter to itself.</em></p>
+              <p>That possibility is forbidden in Enigma but allowed here because the cascade is not constrained by reflector symmetry.</p>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <button class="accordion-button"><span>Fixed Point Distribution</span><span>+</span></button>
+            <div class="accordion-content">
+              <p><em>The fixed-point count has expectation 1, variance 1, and approaches Poisson(1).</em></p>
+              <p>Random permutations usually have a small number of fixed points. Violet is designed so its time-varying permutations behave similarly in aggregate.</p>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <button class="accordion-button"><span>Machine Period</span><span>+</span></button>
+            <div class="accordion-content">
+              <p><em>The global period is 26<sup>r</sup> · 25<sup>k</sup> because the two odometers are coprime.</em></p>
+              <p>The rotor and switch clocks only realign after the full product of their periods, giving Violet an enormous orbit through state space.</p>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <button class="accordion-button"><span>Temporal Diffusion</span><span>+</span></button>
+            <div class="accordion-content">
+              <p><em>The ciphertext depends non-trivially on every component of the initial machine state.</em></p>
+              <p>A one-step perturbation in any rotor or switch setting changes the resulting ciphertext stream significantly.</p>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <button class="accordion-button"><span>Statistical Mixing</span><span>+</span></button>
+            <div class="accordion-content">
+              <p><em>Over long runs, output statistics trend toward approximate uniformity on the alphabet.</em></p>
+              <p>In practice that means ciphertext frequencies flatten and the index of coincidence drifts toward the random baseline near 1/26.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="section-inner">Violet Cipher · A theoretical construct based on the research paper by Tasmai Keni · Implemented for educational and research purposes</div>
+  </footer>
+
+  <script>
+    const starCanvas = document.getElementById("stars");
+    const starContext = starCanvas.getContext("2d");
+    const flash = document.getElementById("flash");
+    const toast = document.getElementById("toast");
+    let stars = [];
+    let codeBuffer = "";
+    const easterCode = "VIOLET";
+    const histogramElement = document.getElementById("histogram");
+    const widgetResult = document.getElementById("widgetResult");
+    const histogramCounts = Array(8).fill(0);
+    let histogramTotal = 0;
+
+    function resizeCanvas() {
+      starCanvas.width = window.innerWidth;
+      starCanvas.height = window.innerHeight;
+      stars = Array.from({ length: Math.max(80, Math.floor(window.innerWidth / 14)) }, () => ({
+        x: Math.random() * starCanvas.width,
+        y: Math.random() * starCanvas.height,
+        radius: Math.random() * 1.8 + 0.3,
+        speed: Math.random() * 0.25 + 0.05,
+        drift: (Math.random() - 0.5) * 0.15,
+        alpha: Math.random() * 0.7 + 0.15,
+      }));
+    }
+
+    function animateStars() {
+      starContext.clearRect(0, 0, starCanvas.width, starCanvas.height);
+      for (const star of stars) {
+        star.y += star.speed;
+        star.x += star.drift;
+        if (star.y > starCanvas.height + 10) star.y = -10;
+        if (star.x < -10) star.x = starCanvas.width + 10;
+        if (star.x > starCanvas.width + 10) star.x = -10;
+        starContext.beginPath();
+        starContext.fillStyle = `rgba(199, 125, 255, ${star.alpha})`;
+        starContext.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        starContext.fill();
+      }
+      requestAnimationFrame(animateStars);
+    }
+
+    function revealOnScroll() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+          }
+        });
+      }, { threshold: 0.16 });
+      document.querySelectorAll(".fade-up").forEach((element) => observer.observe(element));
+    }
+
+    function setupAccordion() {
+      document.querySelectorAll(".accordion-item").forEach((item) => {
+        const button = item.querySelector(".accordion-button");
+        button.addEventListener("click", () => {
+          item.classList.toggle("open");
+        });
+      });
+    }
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function renderHistogram() {
+      histogramElement.innerHTML = "";
+      const maxCount = Math.max(...histogramCounts, 1);
+      histogramCounts.forEach((count, index) => {
+        const bucketLabel = index < 7 ? String(index) : "7+";
+        const bar = document.createElement("div");
+        bar.className = "histogram-bar";
+        const value = document.createElement("span");
+        value.className = "value";
+        value.style.height = `${(count / maxCount) * 140 + 4}px`;
+        const label = document.createElement("strong");
+        label.textContent = `${bucketLabel} (${count})`;
+        bar.appendChild(value);
+        bar.appendChild(label);
+        histogramElement.appendChild(bar);
+      });
+    }
+
+    function rollPermutation() {
+      const permutation = shuffle(Array.from({ length: 26 }, (_, index) => index));
+      const fixedPoints = permutation.reduce((sum, value, index) => sum + (value === index ? 1 : 0), 0);
+      histogramCounts[Math.min(fixedPoints, 7)] += 1;
+      histogramTotal += 1;
+      widgetResult.textContent = `Rolled a random permutation with ${fixedPoints} fixed point${fixedPoints === 1 ? "" : "s"}. Total samples: ${histogramTotal}.`;
+      renderHistogram();
+    }
+
+    function resetHistogram() {
+      histogramCounts.fill(0);
+      histogramTotal = 0;
+      widgetResult.textContent = "No permutation rolled yet.";
+      renderHistogram();
+    }
+
+    function triggerEasterEgg() {
+      flash.classList.remove("active");
+      void flash.offsetWidth;
+      flash.classList.add("active");
+      toast.classList.add("visible");
+      setTimeout(() => toast.classList.remove("visible"), 2400);
+    }
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key.length === 1 && /[a-z]/i.test(event.key)) {
+        codeBuffer = (codeBuffer + event.key.toUpperCase()).slice(-easterCode.length);
+        if (codeBuffer === easterCode) {
+          triggerEasterEgg();
+        }
+      }
+    });
+
+    document.getElementById("rollPermutation").addEventListener("click", rollPermutation);
+    document.getElementById("resetHistogram").addEventListener("click", resetHistogram);
+    window.addEventListener("resize", resizeCanvas);
+
+    resizeCanvas();
+    animateStars();
+    revealOnScroll();
+    setupAccordion();
+    renderHistogram();
+  </script>
+</body>
+</html>
