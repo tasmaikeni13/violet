@@ -5,7 +5,7 @@
 <h1 align="center">💜 Violet: Cascade Electromechanical Cipher Machine</h1>
 
 <p align="center">
-*A beautiful, mathematically rigorous implementation of the cascade electromechanical cipher machine* 🔐✨
+A beautiful, mathematically rigorous implementation of the cascade electromechanical cipher machine 🔐✨
 </p>
 
 ## 🎯 What is Violet?
@@ -245,5 +245,6 @@ If you find Violet useful or just enjoy parsing permutations, please leave a sta
 **Made with 💜 and a passion for cryptography**
 
 *"The enemy is listening. Make sure Violet is talking."* 🔐✨
+
 
 
