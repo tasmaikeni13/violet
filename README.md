@@ -161,7 +161,7 @@ The Violet Studio provides:
 
 ## 🚀 Launcher Menu
 
-![Launcher](docs/screenshots/launcher.png)
+![Launcher](docs/screenshots/violetlauncher.png)
 
 ---
 
