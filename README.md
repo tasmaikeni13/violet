@@ -132,5 +132,4 @@ its own build instructions are in `lean/`.
 
 ## License
 
-No license file is currently included in this checkout. Contact the project
-owner before redistributing or using the code outside evaluation and research.
+Released under the [Apache License 2.0](LICENSE).
