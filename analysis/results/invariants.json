@@ -1,0 +1,48 @@
+{
+  "Violet": {
+    "mean_fixed_points": 0.9817,
+    "var_fixed_points": 0.9789651099999999,
+    "p_zero_fixed_points": 0.37465,
+    "frac_even": 0.5,
+    "frac_involution": 0.0,
+    "min_invariant_block_fraction": 1.0,
+    "distinct_cycle_types": 664,
+    "generated_group_order_log2": 88.38195332701626,
+    "generated_is_full_symmetric": true
+  },
+  "Enigma": {
+    "mean_fixed_points": 0.0,
+    "var_fixed_points": 0.0,
+    "p_zero_fixed_points": 1.0,
+    "frac_even": 0.0,
+    "frac_involution": 1.0,
+    "min_invariant_block_fraction": 1.0,
+    "distinct_cycle_types": 1
+  },
+  "Purple": {
+    "mean_fixed_points": 1.8106,
+    "var_fixed_points": 1.6332276400000003,
+    "p_zero_fixed_points": 0.1606,
+    "frac_even": 0.5015,
+    "frac_involution": 0.0,
+    "min_invariant_block_fraction": 0.23076923076923078,
+    "distinct_cycle_types": 590
+  },
+  "Uniform $S_{26}$": {
+    "mean_fixed_points": 1.00395,
+    "var_fixed_points": 0.9955343975,
+    "p_zero_fixed_points": 0.3661,
+    "frac_even": 0.4955,
+    "frac_involution": 0.0,
+    "min_invariant_block_fraction": 1.0,
+    "distinct_cycle_types": 666
+  },
+  "structural_class_bits": {
+    "Enigma\n(reflector class)": 42.84605837479977,
+    "Purple\n(6/20 stabiliser)": 70.56923701723589,
+    "Rotor bank\n(signature coset)": 87.38195332701626,
+    "Violet\n(unconstrained)": 88.38195332701626
+  },
+  "fpf_involution_count": 7905853580625,
+  "blocks_6_20_count": 230230
+}

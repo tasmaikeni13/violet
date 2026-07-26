@@ -1,0 +1,10 @@
+{
+  "avalanche_open_tail_mean": 0.0,
+  "avalanche_closed_tail_mean": 0.9623953098827471,
+  "avalanche_ideal": 0.9615384615384616,
+  "depth_open_final": 1.0,
+  "depth_closed_final": 0.0,
+  "resync_bound_per_step": 1.550147871859093e-20,
+  "state_bits_strategic": 130.82014271082144,
+  "state_bits_field": 74.75436726332654
+}

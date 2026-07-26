@@ -1,0 +1,16 @@
+name = "violet"
+version = "0.1.0"
+defaultTargets = ["Violet"]
+
+[leanOptions]
+pp.unicode.fun = true
+relaxedAutoImplicit = false
+autoImplicit = false
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "v4.32.0"
+
+[[lean_lib]]
+name = "Violet"

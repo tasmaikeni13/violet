@@ -1,0 +1,75 @@
+{
+  "machines": [
+    {
+      "name": "Enigma M3",
+      "nominal": 76.50812830228364,
+      "states": 20.008209750031796,
+      "period": 16900.0,
+      "log10_period": 4.227886704613674,
+      "years_at_100cpm": 0.0003213172104342536
+    },
+    {
+      "name": "Purple",
+      "nominal": 80.5791177323874,
+      "states": 18.575424759098897,
+      "period": 390625.0,
+      "log10_period": 5.591760034688151,
+      "years_at_100cpm": 0.007426895581413035
+    },
+    {
+      "name": "SIGABA",
+      "nominal": 95.0,
+      "states": 61.88856770051935,
+      "period": 11881376.0,
+      "log10_period": 7.07486673985409,
+      "years_at_100cpm": 0.22589885162369763
+    },
+    {
+      "name": "Violet 8/8",
+      "nominal": 328.1038991126504,
+      "states": 74.75436726332654,
+      "period": 3.18644812890625e+22,
+      "log10_period": 22.503306853142846,
+      "years_at_100cpm": 605834688741777.0
+    },
+    {
+      "name": "Violet 14/14",
+      "nominal": 563.8417476386452,
+      "states": 130.82014271082144,
+      "period": 2.4031838291621638e+39,
+      "log10_period": 39.38078699299998,
+      "years_at_100cpm": 4.569138012704699e+31
+    }
+  ],
+  "accounting": [
+    [
+      "rotor selection\nand order",
+      47.92256581185412,
+      true
+    ],
+    [
+      "rotor positions",
+      65.80615605397529,
+      true
+    ],
+    [
+      "switch positions",
+      65.01398665684614,
+      true
+    ],
+    [
+      "pin rings",
+      338.0,
+      true
+    ],
+    [
+      "plugboard",
+      47.09903911596965,
+      false
+    ]
+  ],
+  "violet_effective_floor_bits": 130.82014271082144,
+  "violet_field_floor_bits": 74.75436726332654,
+  "plugboard_bits": 47.09903911596965,
+  "unicity_distance_letters": 40.875677791802175
+}

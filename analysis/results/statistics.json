@@ -1,0 +1,13 @@
+{
+  "plain_ic": 0.06239950997549878,
+  "cipher_ic_closed": 0.03845249262463123,
+  "cipher_ic_open": 0.03845440772038602,
+  "uniform_ic": 0.038461538461538464,
+  "plain_chi2": 12472.122799999997,
+  "cipher_chi2_closed": 20.296399999999995,
+  "cipher_chi2_open": 21.292199999999998,
+  "chi2_df": 25,
+  "reduced_true_ic_mean": 0.06525319977740679,
+  "reduced_wrong_ic_mean": 0.038404586347616405,
+  "reduced_separation_sigma": 61.42482927902044
+}
